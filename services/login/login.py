@@ -1,5 +1,7 @@
 from flask import Flask, render_template, url_for, request
-import os
+import sys
+import argparse
+from os import system
 
 app = Flask(__name__)
 
@@ -15,5 +17,12 @@ def index():
 
 
 if __name__ == '__main__':
-    print('Running {} service'.format(os.path.basename(__file__).split('.')[0]))
-    app.run(port=5002, debug=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--port', type=int, default=5002,
+                        help='specify which port to run this service on')
+    args = parser.parse_args()
+    args.prog = sys.argv[0].split('/')[-1].split('.')[0]
+
+    print('Running {} service'.format(args.prog))
+    system('title {} service on port {}'.format(args.prog, args.port))
+    app.run(port=args.port, debug=True)
